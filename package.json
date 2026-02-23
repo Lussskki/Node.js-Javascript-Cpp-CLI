@@ -1,0 +1,14 @@
+{
+  "name": "cpp-starter-cli",
+  "version": "1.0.0",
+  "description": "CLI to generate C++ project folder with VSCode configs",
+  "type": "module",
+  "bin": {
+    "cpp-starter-cli": "./src/app.js"
+  },
+  "dependencies": {
+    "commander": "^11.0.0",
+    "inquirer": "^9.0.0",
+    "fs-extra": "^11.0.0"
+  }
+}
