@@ -1,4 +1,11 @@
 #!/usr/bin/env node
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+
+console.log("RUNNING THIS FILE:", __filename);
 
 import { Command } from "commander";
 import inquirer from "inquirer";
@@ -137,22 +144,37 @@ program
 // ------------------ RUN COMMAND ------------------
 program
   .command("run")
-  .description("Build and run the C++ project")
+  .description("Run the C++ project (without rebuilding)")
   .action(async () => {
     try {
-      const outputName = await buildProject();
-      const isWindows = process.platform === "win32";
-      const runCommand = isWindows
-        ? `cmd.exe /c start cmd /k "${outputName} & pause"`
-        : `./${outputName}`;
+      const projectPath = process.cwd();
+      const configPath = path.join(projectPath, ".cpp-cli-config.json");
 
-      console.log(`Running ${outputName}...\n`);
+      if (!(await fs.pathExists(configPath))) {
+        throw new Error("No project config found. Run `cpp-starter-cli init` first.");
+      }
+
+      const config = await fs.readJson(configPath);
+      const isWindows = process.platform === "win32";
+      const exePath = path.join(projectPath, config.outputName);
+
+      if (!(await fs.pathExists(exePath))) {
+        throw new Error("Executable not found. Run `cpp-starter-cli build` first.");
+      }
+
+      console.log(`Running ${config.outputName}...\n`);
+
+      const runCommand = isWindows
+        ? `cmd.exe /c start cmd /k "${config.outputName} & pause"`
+        : `./${config.outputName}`;
+
       exec(runCommand, (err, stdout, stderr) => {
         if (err) return console.error(stderr || err.message);
         console.log(stdout);
       });
+
     } catch (err) {
-      console.error("Error:", err);
+      console.error("Run failed:", err.message);
     }
   });
 
