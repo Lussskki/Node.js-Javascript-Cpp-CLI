@@ -17,7 +17,6 @@ program
   .description("Initialize a new C++ project")
   .action(async () => {
     try {
-      // Prompt user for project settings
       const answers = await inquirer.prompt([
         { name: "projectName", message: "Project name:", default: "cpp_project" },
         { name: "cppStandard", message: "C++ standard:", default: "c++17" },
@@ -25,6 +24,7 @@ program
         { name: "libs", message: "Libraries (comma separated):", default: "opengl,glfw" }
       ]);
 
+      // Determine project path
       const projectPath =
         answers.projectName === "."
           ? process.cwd()
@@ -44,7 +44,7 @@ program
       // Create empty main.cpp
       await fs.writeFile(path.join(srcDir, "main.cpp"), "");
 
-      // Process library list
+      // Process libraries
       const libList = answers.libs
         .split(",")
         .map(l => l.trim().toLowerCase());
@@ -53,7 +53,6 @@ program
       let systemFlags = [];
       const isWindows = process.platform === "win32";
 
-      // Link GLFW / OpenGL
       if (libList.includes("glfw")) {
         linkerFlags.push("-lglfw3");
         if (isWindows) {
@@ -72,7 +71,6 @@ program
         linkerFlags.push(isWindows ? "-lglew32" : "-lGLEW");
       }
 
-      // Header-only libraries setup
       if (libList.includes("glm")) {
         await fs.ensureDir(path.join(includeDir, "glm"));
       }
@@ -83,27 +81,34 @@ program
 
       if (libList.includes("tinyobj")) {
         await fs.ensureDir(path.join(includeDir, "tinyobjloader"));
-
-        // Generate tinyobjloader implementation file
         const tinyImpl = `#define TINYOBJLOADER_IMPLEMENTATION
                           #include "tinyobjloader/tiny_obj_loader.h"
-        `;
-        await fs.writeFile(
-          path.join(srcDir, "tinyobjloader_impl.cpp"),
-          tinyImpl
-        );
+`;
+        await fs.writeFile(path.join(srcDir, "tinyobjloader_impl.cpp"), tinyImpl);
       }
 
-      // Output executable name
-      const outputName = isWindows
-        ? `${answers.projectName}main.exe`
-        : answers.projectName;
+      // GLAD folder setup (manual)
+      if (libList.includes("glad")) {
+        await fs.ensureDir(path.join(includeDir, "glad")); // glad.h
+        await fs.ensureDir(path.join(includeDir, "KHR"));  // khrplatform.h
+        console.log("GLAD folders created. Place glad.h, KHR/khrplatform.h, and glad.c manually.");
+      }
+
+      // Detect source files
+      const srcFiles = ["src/main.cpp"];
+      if (libList.includes("tinyobj")) srcFiles.push("src/tinyobjloader_impl.cpp");
+      const gladCPath = path.join(srcDir, "glad.c");
+      if (await fs.pathExists(gladCPath)) srcFiles.push("src/glad.c");
+
+      // Proper executable name
+      const baseName = path.basename(projectPath);
+      const outputName = isWindows ? `${baseName}.exe` : baseName;
 
       // Build command
       const buildCommand = [
         answers.compiler,
         `-std=${answers.cppStandard}`,
-        "src/*.cpp",
+        ...srcFiles,
         "-Iinclude",
         "-Llib",
         ...linkerFlags,
@@ -154,14 +159,13 @@ program
         version: 4
       };
 
-      await fs.writeJson(
-        path.join(vscodeDir, "c_cpp_properties.json"),
-        cppProps,
-        { spaces: 2 }
-      );
+      await fs.writeJson(path.join(vscodeDir, "c_cpp_properties.json"), cppProps, { spaces: 2 });
 
-      console.log(`\nProject "${answers.projectName}" created at:\n${projectPath}\n`);
-      console.log("Header folders for GLM, stb_image, and tinyobjloader have been created (place headers manually inside include/).");
+      console.log(`\nProject created at: ${projectPath}`);
+      console.log(`Executable: ${outputName}`);
+      console.log("Header-only libraries (GLM, stb, tinyobjloader, GLAD) should be placed manually inside include/.");
+      console.log("If you want GLAD, also add glad.c into src/ manually to avoid linker errors.");
+
     } catch (err) {
       console.error("\nError:", err.message);
     }
