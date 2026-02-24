@@ -49,6 +49,8 @@ my_game/
 
 ## Notes
 
-```main.cpp``` is not generated — you can add your starter code manually.
+```main.cpp``` is  generated — you can use it for your starter code.
+
+To work with this listed libraries, you have to download it manually and just copy-paste it in ```include``` and ```lib```.
 
 Works best on Linux and other systems using g++ or compatible compilers.
