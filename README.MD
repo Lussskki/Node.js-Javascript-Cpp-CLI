@@ -27,7 +27,7 @@ You will be prompted for:
 
 - Compiler command (default: g++)
 
-- Libraries (comma-separated, default: opengl,glfw,glew)
+- Libraries (comma-separated, default: opengl,glfw, glm, stb_image.h, tinyobjloader)
 
 Example:
 ```bash
