@@ -69,7 +69,7 @@ program
       }
 
       const outputName = isWindows
-        ? `${answers.projectName}.exe`
+        ? `${answers.projectName}main.exe`
         : answers.projectName;
 
       const buildCommand = [
