@@ -32,13 +32,13 @@ program
       const vscodeDir = path.join(projectPath, ".vscode");
       const srcDir = path.join(projectPath, "src");
       const includeDir = path.join(projectPath, "include");
+      const libDir = path.join(projectPath, "lib");
 
       // Create project folders
       await fs.ensureDir(srcDir);
       await fs.ensureDir(includeDir);
+      await fs.ensureDir(libDir);
       await fs.ensureDir(vscodeDir);
-
-      // Skip main.cpp (no starter code)
 
       // Write tasks.json
       const tasks = {
@@ -79,9 +79,9 @@ program
       };
       await fs.writeJson(path.join(vscodeDir, "c_cpp_properties.json"), cppProps, { spaces: 2 });
 
-      console.log(`\n✅ C++ project "${answers.projectName}" created successfully at:\n${projectPath}\n`);
+      console.log(`\n C++ project "${answers.projectName}" created successfully at:\n${projectPath}\n`);
     } catch (err) {
-      console.error("\n❌ Error creating project:", err.message);
+      console.error("\n Error creating project:", err.message);
     }
   });
 
