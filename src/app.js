@@ -31,7 +31,7 @@ program
         {
           name: "libs",
           message: "Libraries (comma separated):",
-          default: "opengl,glfw,glm,glad"   
+          default: "opengl,glfw,glm,glad,tinyobjloader,stbimage"
         }
       ]);
 
@@ -54,59 +54,11 @@ program
         .split(",")
         .map(l => l.trim().toLowerCase());
 
-      // ✅ Prevent GLAD + GLEW together
+      // Prevent GLAD + GLEW together
       if (libList.includes("glad") && libList.includes("glew")) {
-        console.log("⚠ You selected both GLAD and GLEW.");
-        console.log("GLAD will be used. Removing GLEW automatically.\n");
+        console.log("⚠ GLAD and GLEW selected. Removing GLEW.\n");
         libList = libList.filter(l => l !== "glew");
       }
-
-      const tasks = {
-        version: "2.0.0",
-        tasks: [
-          {
-            label: "build",
-            type: "shell",
-            command: "echo Build via CLI",
-            group: { kind: "build", isDefault: true },
-            problemMatcher: ["$gcc"]
-          },
-          {
-            label: "run",
-            type: "shell",
-            command: "echo Run via CLI",
-            dependsOn: "build"
-          }
-        ]
-      };
-
-      await fs.writeJson(path.join(vscodeDir, "tasks.json"), tasks, { spaces: 2 });
-
-      const cppProps = {
-        configurations: [
-          {
-            name: process.platform === "win32" ? "Windows" : "Linux",
-            includePath: [
-              "${workspaceFolder}/include",
-              "${workspaceFolder}/include/**",
-              "${workspaceFolder}/**"
-            ],
-            defines: [],
-            compilerPath: answers.compiler,
-            cStandard: "c11",
-            cppStandard: answers.cppStandard,
-            intelliSenseMode:
-              process.platform === "win32" ? "gcc-x64" : "linux-gcc-x64"
-          }
-        ],
-        version: 4
-      };
-
-      await fs.writeJson(
-        path.join(vscodeDir, "c_cpp_properties.json"),
-        cppProps,
-        { spaces: 2 }
-      );
 
       const configData = {
         compiler: answers.compiler,
@@ -143,7 +95,7 @@ async function buildProject() {
   const srcDir = path.join(projectPath, "src");
 
   const srcFiles = (await fs.readdir(srcDir))
-    .filter(f => f.endsWith(".cpp"))
+    .filter(f => f.endsWith(".cpp") || f.endsWith(".c"))
     .map(f => path.join("src", f));
 
   const isWindows = process.platform === "win32";
@@ -151,36 +103,43 @@ async function buildProject() {
   let linkerFlags = [];
   let systemFlags = [];
 
-  // ------------------ GLFW ------------------
+  // GLFW
   if (config.libs.includes("glfw")) {
     linkerFlags.push("-lglfw3");
-
-    if (isWindows) {
-      systemFlags.push("-lgdi32");
-    } else {
-      systemFlags.push("-ldl", "-pthread");
-    }
+    if (isWindows) systemFlags.push("-lgdi32");
+    else systemFlags.push("-ldl", "-pthread");
   }
 
-  // ------------------ OpenGL ------------------
+  // OpenGL
   if (config.libs.includes("opengl") || config.libs.includes("glfw")) {
     if (isWindows) systemFlags.push("-lopengl32");
     else systemFlags.push("-lGL");
   }
 
-  // ------------------ GLEW (only if GLAD not used) ------------------
+  // GLEW (only if GLAD not used)
   if (config.libs.includes("glew") && !config.libs.includes("glad")) {
     linkerFlags.push(isWindows ? "-lglew32" : "-lGLEW");
   }
 
-  // ------------------ GLAD ------------------
+  // GLAD
   if (config.libs.includes("glad")) {
     const gladSrc = path.join(projectPath, "src", "glad.c");
-    if (await fs.pathExists(gladSrc)) {
-      srcFiles.push("src/glad.c");
-    } else {
-      console.warn("⚠ Warning: GLAD source missing: src/glad.c");
-    }
+    if (!(await fs.pathExists(gladSrc)))
+      console.warn("⚠ GLAD source missing: src/glad.c");
+  }
+
+  // tinyobjloader
+  if (config.libs.includes("tinyobjloader")) {
+    const header = path.join(projectPath, "include", "tiny_obj_loader.h");
+    if (!(await fs.pathExists(header)))
+      console.warn("⚠ tiny_obj_loader.h missing in include/");
+  }
+
+  // stbimage
+  if (config.libs.includes("stbimage")) {
+    const header = path.join(projectPath, "include", "stb_image.h");
+    if (!(await fs.pathExists(header)))
+      console.warn("⚠ stb_image.h missing in include/");
   }
 
   const buildCommand = [
