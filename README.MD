@@ -32,19 +32,20 @@ You will be prompted for:
 
 - Compiler command (default: g++)
 
-- Libraries (comma-separated, default: opengl,glfw, glm, stb_image.h, tinyobjloader)
+- Libraries (comma-separated, default: opengl,glfw, glad, glm)
 
 Example:
 ```bash
 ? Project name: my_game
 ? C++ standard: c++20
 ? Compiler command: g++
-? Libraries (comma separated): glfw,glm 
+? Libraries (comma separated): glfw,glm,glad 
 ```
 ## After completion, your project structure will look like:
 ```
 my_game/
 ├── src/
+├── lib/
 ├── include/
 └── .vscode/
     ├── tasks.json
@@ -53,8 +54,6 @@ my_game/
  You can now build and run your project directly from VSCode.
 
 ## Notes
-
-```main.cpp``` is  generated — you can use it for your starter code.
 
 To work with this listed libraries, you have to download it manually and just copy-paste it in ```include``` and ```lib```.
 
