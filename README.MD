@@ -37,7 +37,7 @@ You will be prompted for:
 Example:
 ```bash
 ? Project name: my_game
-? C++ standard: c++20
+? C++ standard: c++17
 ? Compiler command: g++
 ? Libraries (comma separated): glfw,glm,glad 
 ```
