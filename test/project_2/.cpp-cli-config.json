@@ -1,0 +1,13 @@
+{
+  "compiler": "g++",
+  "cppStandard": "c++17",
+  "libs": [
+    "opengl",
+    "glfw",
+    "glm",
+    "glad",
+    "tinyobjloader",
+    "stbimage"
+  ],
+  "outputName": "project_2.exe"
+}
