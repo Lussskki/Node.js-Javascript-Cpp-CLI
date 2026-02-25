@@ -30,7 +30,7 @@ program
         { name: "projectName", message: "Project name:", default: "cpp_project" },
         { name: "cppStandard", message: "C++ standard:", default: "c++17" },
         { name: "compiler", message: "Compiler command:", default: "g++" },
-        { name: "libs", message: "Libraries (comma separated):", default: "opengl,glfw" }
+        { name: "libs", message: "Libraries (comma separated):", default: "opengl,glfw, glad, tinyobj, stb" }
       ]);
 
       const projectPath = answers.projectName === "." ? process.cwd() : path.join(process.cwd(), answers.projectName);
