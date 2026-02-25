@@ -31,7 +31,7 @@ program
         {
           name: "libs",
           message: "Libraries (comma separated):",
-          default: "opengl,glfw,glm,glad"   // ✅ GLEW removed
+          default: "opengl,glfw,glm,glad"   
         }
       ]);
 
