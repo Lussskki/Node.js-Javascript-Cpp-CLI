@@ -1,0 +1,11 @@
+{
+  "compiler": "g++",
+  "cppStandard": "c++17",
+  "libs": [
+    "opengl",
+    "glfw",
+    "glm",
+    "glad"
+  ],
+  "outputName": "cpp_project.exe"
+}
