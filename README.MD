@@ -1,5 +1,5 @@
 ## Node.js-Javascript-Cpp-CLI
-It's my ever created cli for me, i am writing a c++/opengl  code and It is necessary for me to write on a lightweight vscode IDE.
+It's my first ever created cli for me, i am writing a c++/opengl  code and It is necessary for me to write on a lightweight vscode IDE.
 
 ## Youtube Video
 [![Watch the Video](https://img.youtube.com/vi/sVYdlhQS360/0.jpg)](https://www.youtube.com/watch?v=sVYdlhQS360)
