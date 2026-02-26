@@ -18,7 +18,7 @@ program
   .version("1.0.0");
 
 
-// ------------------ INIT ------------------
+// INIT 
 program
   .command("init")
   .description("Initialize a new C++ project")
@@ -76,14 +76,14 @@ program
         { spaces: 2 }
       );
 
-      console.log("✅ Init Complete!");
+      console.log(" Init Complete!");
     } catch (err) {
       console.error("\nError:", err.message);
     }
   });
 
 
-// ------------------ BUILD FUNCTION ------------------
+// BUILD FUNCTION
 async function buildProject() {
   const projectPath = process.cwd();
   const configPath = path.join(projectPath, ".cpp-cli-config.json");
@@ -159,14 +159,13 @@ async function buildProject() {
   return new Promise((resolve, reject) => {
     exec(buildCommand, (err, stdout, stderr) => {
       if (err) return reject(stderr || err.message);
-      console.log("✅ Build succeeded!");
+      console.log(" Build succeeded!");
       resolve(config.outputName);
     });
   });
 }
 
-
-// ------------------ BUILD ------------------
+//  BUILD 
 program.command("build").action(async () => {
   try {
     await buildProject();
@@ -176,7 +175,7 @@ program.command("build").action(async () => {
 });
 
 
-// ------------------ RUN ------------------
+//  RUN 
 program.command("run").action(async () => {
   try {
     const config = await fs.readJson(".cpp-cli-config.json");
