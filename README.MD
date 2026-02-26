@@ -1,14 +1,12 @@
-## Node.js-Javascript-Cpp-CLI
+# Node.js-Javascript-Cpp-CLI
 
 This is my first CLI tool. I created it to quickly set up C++ / OpenGL projects and work in a lightweight VSCode environment.
-
 
 ## YouTube Video
 
 [![Watch the Video](https://img.youtube.com/vi/sVYdlhQS360/0.jpg)](https://www.youtube.com/watch?v=sVYdlhQS360)
 
-Watch the demo on YouTube → https://www.youtube.com/watch?v=sVYdlhQS360
-
+Watch the demo on YouTube → [Click Here](https://www.youtube.com/watch?v=sVYdlhQS360)
 
 
 ## Features
@@ -18,6 +16,16 @@ Watch the demo on YouTube → https://www.youtube.com/watch?v=sVYdlhQS360
 * Generate `tasks.json` for building and running in VSCode
 * Generate `c_cpp_properties.json` for IntelliSense and compiler configuration
 * Supports custom C++ standard, compiler, and libraries
+
+
+
+## Requirements
+
+* Node.js (v14+ recommended)
+* npm
+* g++ or another compatible C++ compiler
+* VSCode (optional but recommended for using the generated tasks)
+
 
 
 ## Installation
@@ -39,6 +47,7 @@ npm link
 ```
 
 This creates a global symlink so your changes update automatically.
+
 
 
 ## Usage
@@ -89,6 +98,7 @@ your-project/
     └── c_cpp_properties.json
 ```
 
+
 ## Commands
 
 ### Build the project
@@ -112,8 +122,14 @@ cpp-starter-cli build
 cpp-starter-cli run
 ```
 
+
 ## Notes
 
 To use the listed libraries, you need to download them manually and copy them into the `include` and `lib` folders.
 
 Works best on Linux and other systems using `g++` or compatible compilers.
+
+
+## License
+
+This project is licensed under the MIT License.
