@@ -76,6 +76,31 @@ program
         { spaces: 2 }
       );
 
+      // c_cpp_properties.json
+      await fs.writeJson(
+        path.join(vscodeDir, "c_cpp_properties.json"),
+        {
+          configurations: [
+            {
+              name: process.platform === "win32" ? "Win32" : "Linux",
+              includePath: [
+                "${workspaceFolder}/**",
+                "${workspaceFolder}/include/**"
+              ],
+              defines: [],
+              compilerPath: answers.compiler,
+              cStandard: "c17",
+              cppStandard: answers.cppStandard,
+              intelliSenseMode: process.platform === "win32"
+                ? "gcc-x64"
+                : "linux-gcc-x64"
+            }
+          ],
+          version: 4
+        },
+        { spaces: 2 }
+      );
+
       console.log(" Init Complete!");
     } catch (err) {
       console.error("\nError:", err.message);
