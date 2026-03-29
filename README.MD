@@ -13,7 +13,6 @@ Watch the demo on YouTube → [Click Here](https://www.youtube.com/watch?v=sVYdl
 
 * Initialize a new C++ project folder
 * Create standard project directories: `src`, `include`, `lib`, and `.vscode`
-* Generate `tasks.json` for building and running in VSCode
 * Generate `c_cpp_properties.json` for IntelliSense and compiler configuration
 * Supports custom C++ standard, compiler, and libraries
 
