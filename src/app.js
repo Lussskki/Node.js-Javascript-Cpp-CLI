@@ -17,6 +17,22 @@ program
   .description("Generate C++ project folder with VSCode configuration and build/run commands")
   .version("1.0.0");
 
+function createBuildEnv(compiler) {
+  const env = { ...process.env };
+
+  if (!path.isAbsolute(compiler)) return env;
+
+  const compilerDir = path.dirname(compiler);
+  const pathKey = Object.keys(env).find(key => key.toLowerCase() === "path") || "PATH";
+  const currentPath = env[pathKey] || "";
+
+  env[pathKey] = currentPath
+    ? `${compilerDir}${path.delimiter}${currentPath}`
+    : compilerDir;
+
+  return env;
+}
+
 
 // INIT 
 program
@@ -182,7 +198,7 @@ async function buildProject() {
   console.log(`\nCompiling: ${buildCommand}\n`);
 
   return new Promise((resolve, reject) => {
-    exec(buildCommand, (err, stdout, stderr) => {
+    exec(buildCommand, { env: createBuildEnv(config.compiler) }, (err, stdout, stderr) => {
       if (err) return reject(stderr || err.message);
       console.log(" Build succeeded!");
       resolve(config.outputName);
